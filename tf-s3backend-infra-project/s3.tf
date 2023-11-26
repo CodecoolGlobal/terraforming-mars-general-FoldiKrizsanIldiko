@@ -1,27 +1,28 @@
+terraform {
+ required_providers {
+   aws = {
+     source  = "hashicorp/aws"
+     version = "5.10.0"
+   }
+ }
+}
+ 
+provider "aws" {
+ region = "eu-west-1"
+}
+
 
 resource "aws_s3_bucket" "this" {
     bucket = "istumpf-s3-backend"
-    object_lock_enabled = true
     tags = {
         Name = "S3 Remote Terraform State Store"
     }
 }
 
-resource "aws_s3_bucket_object_lock_configuration" "example" {
-  bucket = aws_s3_bucket.this.id
-
-  rule {
-    default_retention {
-      mode = "COMPLIANCE"
-      days = 5
-    }
-  }
-}
-
 resource "aws_s3_bucket_versioning" "versioning_example" {
   bucket = aws_s3_bucket.this.id
   versioning_configuration {
-    status = "Enabled"
+    status = "Disabled"
   }
 }
 
